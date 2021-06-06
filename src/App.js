@@ -22,12 +22,11 @@ const useStyles = makeStyles((theme)=>({
   },
   barra: {
     backgroundColor: '#272727',
-    '& button': {
-      color: '#ffffff'
-    },
-    '& button:hover': {
-      color: '#ffffff'
-    }
+    '& .Mui-selected': { color: '#ff9800' },
+    '& .MuiBottomNavigationAction-iconOnly': { color: '#ffffff' },
+  },
+  barraItem: {
+    color: '#ffffff'
   }
 }))
 
@@ -43,19 +42,39 @@ function App(props) {
   const conectado = useSelector(state => state.clickState.conectado);
   const dispatch = useDispatch();
 
+
+    function addUsuario(usr){
+      dispatch({ type: 'CLICK_ADD_USUARIO', usuario: usr  })
+    }
+
+    function addId(idUsr){
+      dispatch({type: 'CLICK_ADD_ID', id: idUsr})
+    }
+    function addConectado(usrConectado){
+      dispatch({type: 'CLICK_ADD_CONECTADO', conectado: usrConectado})
+    }
+
+
   return (
     <React.Fragment>
-      <FirestoreProvider firebase={fire.default} {...firebaseConfig}>
+      <Router>
+        <FirestoreProvider firebase={fire.default} {...firebaseConfig}>
 
-        <Login />
+          <Login />
 
 
-        <BottomNavigation value={value} onChange={handleChange} className={classes.barra}>
-          <BottomNavigationAction label="Agenda" value="agenda" icon={<RecentActors />} />
-          <BottomNavigationAction label="Mensagens" value="mensagens" icon={<Forum />} />
-          <BottomNavigationAction label="Logout" value="logout" icon={<ExitToApp />} />
-        </BottomNavigation>
-      </FirestoreProvider>
+          <BottomNavigation value={value} onChange={handleChange} showLabels className={classes.barra}>
+            <BottomNavigationAction label="Agenda" value="agenda" className={classes.barraItem} component={Link} to="/agenda" icon={<RecentActors />} />
+            <BottomNavigationAction label="Mensagens" value="mensagens" className={classes.barraItem} component={Link} to="/mensagens" icon={<Forum />} />
+            <BottomNavigationAction label="Logout" value="logout" className={classes.barraItem} icon={<ExitToApp />} onClick={()=>{
+                addUsuario({nome:'', telefone: '', icone: '', email: '', senha:''})
+                addId('')
+                addConectado(false)
+                console.warn('Logout:', id, usuario, conectado);
+              }} />
+          </BottomNavigation>
+        </FirestoreProvider>
+      </Router>
     </React.Fragment>
   );
 }

@@ -57,6 +57,8 @@ function Login(props){
                               addUsuario(item)
                               addId(d.ids[indice])
                               addConectado(true)
+
+                              console.error('Login:',id, usuario, conectado);
                             }
                           })
                      }}>

@@ -1,8 +1,8 @@
 import { CLICK_ADD_USUARIO, CLICK_ADD_ID, CLICK_ADD_CONECTADO } from '../actions/actionsTypes';
 
 const initialState = {
-  usuario: {nome:'teste', telefone: '999999', icone: 'usuario.svg', email: 'teste@gmail.com', senha:'123456'},
-  id: '0',
+  usuario: {nome:'', telefone: '', icone: '', email: '', senha:''},
+  id: '',
   conectado: false
 };
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { TextField, Button } from '@material-ui/core/';
-import { Save } from '@material-ui/icons/';
+import { Save, Person } from '@material-ui/icons/';
 import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/firestore';
@@ -45,6 +45,10 @@ function Login(props){
         <TextField id="emailLogin" type="email" label="Email:" fullWidth className={classes.entradas} />
         <TextField id="senhaLogin" type="password" label="Senha:" fullWidth className={classes.entradas} />
 
+        <Button color="primary" component={Link} to="/cadastro">
+          Cadastre-se
+        </Button>
+
         <FirestoreCollection path="/usuarios">
           {d=>{
             if(d.isLoading) return <p><b>Carregando!</b></p>
@@ -62,7 +66,7 @@ function Login(props){
                             }
                           })
                      }}>
-                        Salvar <Save />
+                        Entrar <Person />
                      </Button>
             }
           }}

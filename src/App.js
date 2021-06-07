@@ -12,6 +12,9 @@ import * as fire from 'firebase/app';
 import { firebaseConfig } from './config';
 import { useSelector, useDispatch } from 'react-redux';
 import Login from './components/login'
+import Cadastrar from './components/usuario/cadastro';
+import Agenda from './components/agenda/agenda';
+import Mensagem from './components/mensagens'
 
 const useStyles = makeStyles((theme)=>({
   formulario: {
@@ -61,6 +64,41 @@ function App(props) {
         <FirestoreProvider firebase={fire.default} {...firebaseConfig}>
 
           <Login />
+          <Mensagem />
+
+          <Switch>
+            <Route path="/login" render={()=>{
+                <div>
+                  {console.log('/login',conectado ? 'sim' : 'não')}
+                  {conectado ? <Redirect to="/mensagens" /> : <Login /> }
+                </div>
+              }} />
+            <Route path="/cadastro" render={()=>{
+                <div>
+                  {console.log('/cadastro',conectado ? 'sim' : 'não')}
+                  {conectado ? <Redirect to="/mensagens" /> : <Cadastrar /> }
+                </div>
+              }} />
+            <Route path="/mensagens" render={()=>{
+                <div>
+                  {console.log('/mensagens',conectado ? 'sim' : 'não')}
+                  {conectado ?  <Mensagem /> : <Redirect to="/login" /> }
+                </div>
+              }} />
+            <Route path="/agenda" render={()=>{
+                <div>
+                  {console.log('/agenda',conectado ? 'sim' : 'não')}
+                  {conectado ? <Agenda /> : <Redirect to="/login" />}
+                </div>
+              }} />
+            <Route path="/contato" render={()=>{
+                <div>
+                  {console.log('/contato', conectado ? 'sim' : 'não')}
+                  {conectado ? <p>Cadastrar contato</p> : <Redirect to="/login" />}
+                </div>
+              }} />
+            <Redirect from="*" to="/login" />
+          </Switch>
 
 
           <BottomNavigation value={value} onChange={handleChange} showLabels className={classes.barra}>

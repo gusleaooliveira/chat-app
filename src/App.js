@@ -14,7 +14,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import Login from './components/login'
 import Cadastrar from './components/usuario/cadastro';
 import Agenda from './components/agenda/agenda';
-import Mensagem from './components/mensagens'
+import Mensagem from './components/mensagens';
+import Contato from './components/agenda/contato';
+import Cabecalho from './components/cabecalho';
 
 const useStyles = makeStyles((theme)=>({
   formulario: {
@@ -39,6 +41,7 @@ function App(props) {
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
+  const [isLoged, setIsLogued] = useState(true);
 
   const usuario = useSelector(state => state.clickState.usuario);
   const id = useSelector(state => state.clickState.id);
@@ -63,40 +66,41 @@ function App(props) {
       <Router>
         <FirestoreProvider firebase={fire.default} {...firebaseConfig}>
 
-          <Login />
-          <Mensagem />
+
 
           <Switch>
-            <Route path="/login" render={()=>{
-                <div>
-                  {console.log('/login',conectado ? 'sim' : 'não')}
-                  {conectado ? <Redirect to="/mensagens" /> : <Login /> }
-                </div>
-              }} />
-            <Route path="/cadastro" render={()=>{
-                <div>
-                  {console.log('/cadastro',conectado ? 'sim' : 'não')}
-                  {conectado ? <Redirect to="/mensagens" /> : <Cadastrar /> }
-                </div>
-              }} />
-            <Route path="/mensagens" render={()=>{
-                <div>
-                  {console.log('/mensagens',conectado ? 'sim' : 'não')}
-                  {conectado ?  <Mensagem /> : <Redirect to="/login" /> }
-                </div>
-              }} />
-            <Route path="/agenda" render={()=>{
-                <div>
-                  {console.log('/agenda',conectado ? 'sim' : 'não')}
-                  {conectado ? <Agenda /> : <Redirect to="/login" />}
-                </div>
-              }} />
-            <Route path="/contato" render={()=>{
-                <div>
-                  {console.log('/contato', conectado ? 'sim' : 'não')}
-                  {conectado ? <p>Cadastrar contato</p> : <Redirect to="/login" />}
-                </div>
-              }} />
+
+            <Route path="/login">
+              <div>
+                <Cabecalho tipo="" />
+                {conectado ? <Redirect to="/mensagens"/> : <Login /> }
+              </div>
+            </Route>
+            <Route path="/cadastro">
+              <div>
+                <Cabecalho tipo="cadastro" />
+                {conectado ? <Redirect to="/mensagens"/> : <Cadastrar /> }
+              </div>
+            </Route>
+            <Route path="/mensagens">
+              <div>
+                <Cabecalho tipo="" />
+                {conectado ? <Mensagem /> : <Redirect to="/login" /> }
+              </div>
+            </Route>
+            <Route path="/agenda">
+              <div>
+                <Cabecalho tipo="" />
+                {conectado ? <Agenda /> : <Redirect to="/login" /> }
+              </div>
+            </Route>
+            <Route path="/contato">
+              <div>
+                <Cabecalho tipo="contato" />
+                {conectado ? <Contato /> : <Redirect to="/login" /> }
+              </div>
+            </Route>
+
             <Redirect from="*" to="/login" />
           </Switch>
 

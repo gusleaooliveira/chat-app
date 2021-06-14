@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { TextField, Button, Accordion, AccordionSummary, AccordionDetails, Card, CardHeader, Avatar, Typography, CardContent } from '@material-ui/core/';
-import { Save, Person, ExpandMore } from '@material-ui/icons/';
+import { TextField,Fab, Button, Accordion, AccordionSummary, AccordionDetails, Card, CardHeader, Avatar, Typography, CardContent } from '@material-ui/core/';
+import { Save, Person, Add, ExpandMore } from '@material-ui/icons/';
 import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/firestore';
@@ -26,6 +26,11 @@ const useStyles = makeStyles((theme)=>({
   cabecalho: {
     fontSize: theme.typography.pxToRem(15),
     fontWeigth: theme.typography.fontWeigthRegular,
+  },
+  fab: {
+    position: 'absolute',
+    bottom: theme.spacing(2),
+    right: theme.spacing(2)
   }
 }))
 
@@ -48,7 +53,9 @@ function Agenda(){
     dispatch({type: 'CLICK_ADD_CONECTADO', conectado: usrConectado})
   }
 
-  return <FirestoreCollection path="/contatos">
+  return <div>
+
+      <FirestoreCollection path="/contatos">
             {d=>{
               if(d.isLoading) return <p><b>Carregando!</b></p>
               if(d.value.length > 0){
@@ -81,7 +88,15 @@ function Agenda(){
                        </div>
               }
             }}
+
+
+
          </FirestoreCollection>
+
+         <Fab  className={classes.fab} color="primary" component={Link} to="/contato" aria-label="add">
+           <Add />
+         </Fab>
+       </div>
 }
 
 export default Agenda;

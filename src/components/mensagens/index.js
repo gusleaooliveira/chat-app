@@ -53,24 +53,7 @@ function Mensagens(){
 
   return <div>
             <form className={classes.formulario} noValidade autoComplete="off">
-              <FirestoreCollection path="/contatos">
-                {d=>{
-                  if(d.isLoading) return <p><b>Carregando!</b></p>
-                  if(d.value.length > 0){
-                    return <FormControl fullWidth className={classes.entradas}>
-                             <InputLabel id="selecione" >Contato:</InputLabel>
-                             <NativeSelect fullWidth labelId="selecione" id="contato">
-                                <option value="None" aria-label="None">Selecione...</option>
-                                {d.value.map((item, indice)=>{
-                                  if(item['idUsuario'] == id){
-                                    return <option value={d.ids[indice]}>{item['nome']}</option>
-                                  }
-                                })}
-                             </NativeSelect>
-                           </FormControl>
-                  }
-                }}
-              </FirestoreCollection>
+
               <Card fullWidth className={classes.cartao}>
                 <CardHeader
                   title="Mensagens:"
@@ -173,6 +156,24 @@ function Mensagens(){
                   </FirestoreCollection>
                 </CardContent>
               </Card>
+              <FirestoreCollection path="/contatos">
+                {d=>{
+                  if(d.isLoading) return <p><b>Carregando!</b></p>
+                  if(d.value.length > 0){
+                    return <FormControl fullWidth className={classes.entradas}>
+                             <InputLabel id="selecione" >Contato:</InputLabel>
+                             <NativeSelect fullWidth labelId="selecione" id="contato">
+                                <option value="None" aria-label="None">Selecione...</option>
+                                {d.value.map((item, indice)=>{
+                                  if(item['idUsuario'] == id){
+                                    return <option value={d.ids[indice]}>{item['nome']}</option>
+                                  }
+                                })}
+                             </NativeSelect>
+                           </FormControl>
+                  }
+                }}
+              </FirestoreCollection>
               <TextField id="mensagem" label="Mensagem:" fullWidth className={classes.entradas} />
               <input  type="hidden" id="id" value={id} />
               <FirestoreMutation path="/mensagens" type="add">

@@ -5,6 +5,7 @@ import { Save, Person, ExpandMore } from '@material-ui/icons/';
 import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/firestore';
+import 'firebase/storage';
 import { FirebaseAuthProvider, FirebaseAuthConsumer, IfFirebaseAuthed, IfFirebaseAuthedAnd } from '@react-firebase/auth';
 import { FirestoreCollection, FirestoreDocument, FirestoreMutation, FirestoreProvider } from '@react-firebase/firestore';
 import { BrowserRouter as Router, Redirect, Route, Switch, Link, useLocation, useParams, useRouteMatch } from 'react-router-dom';
@@ -12,6 +13,7 @@ import * as fire from 'firebase/app';
 import { firebaseConfig } from '../../config';
 import { useSelector, useDispatch } from 'react-redux';
 import imgUsr from '../../icons/usuario.svg'
+import FileUploader from 'react-firebase-file-uploader';
 
 const useStyles = makeStyles((theme)=>({
   formulario: {
@@ -29,6 +31,10 @@ const useStyles = makeStyles((theme)=>({
   },
   inline: {
     display: 'inline'
+  },
+  lista: {
+    overflow: 'auto',
+    maxHeight: 300
   }
 }))
 
@@ -39,6 +45,31 @@ function Mensagens(){
   const id = useSelector(state => state.clickState.id);
   const conectado = useSelector(state => state.clickState.conectado);
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [imagem, setImagem] = useState('')
+  const [url, setUrl] = useState('')
+
+  function handleUploadStart(){
+    setIsLoading(true)
+    setProgress(0)
+  }
+  function handleProgress(progress){
+      setProgress(progress)
+  }
+  function handleUploadError(error){
+    setIsLoading(false)
+    console.error(error)
+  }
+  function handleUploadSuccess(filename){
+    setImagem(filename)
+    setProgress(100)
+    setIsLoading(false)
+
+    fire.default.storage().ref('images').child(filename).getDownloadURL().then(url=>setUrl(url))
+
+    alert('Arquivo carregado!')
+  }
 
   function addUsuario(usr){
     dispatch({ type: 'CLICK_ADD_USUARIO', usuario: usr  })
@@ -54,16 +85,12 @@ function Mensagens(){
   return <div>
             <form className={classes.formulario} noValidade autoComplete="off">
 
-              <Card fullWidth className={classes.cartao}>
-                <CardHeader
-                  title="Mensagens:"
-                />
-                <CardContent>
+
                   <FirestoreCollection path="/mensagens">
                     {d=>{
                       if(d.isLoading)return <p><b>Carregando!</b></p>
                       if(d.value.length > 0){
-                        return <List>
+                        return <List className={classes.lista}>
                                   {d.value.map((item, indice)=>{
                                     if(item['de'] == id){
                                       return <div>
@@ -100,6 +127,8 @@ function Mensagens(){
                                                       </FirestoreDocument>
                                                       </Typography>
                                                       {" - "+item['mensagem']}
+                                                      <br />
+                                                      <img src={item['imagem']} />
                                                     </React.Fragment>
                                                   }
                                                 />
@@ -154,8 +183,6 @@ function Mensagens(){
                       }
                     }}
                   </FirestoreCollection>
-                </CardContent>
-              </Card>
               <FirestoreCollection path="/contatos">
                 {d=>{
                   if(d.isLoading) return <p><b>Carregando!</b></p>
@@ -176,13 +203,28 @@ function Mensagens(){
               </FirestoreCollection>
               <TextField id="mensagem" label="Mensagem:" fullWidth className={classes.entradas} />
               <input  type="hidden" id="id" value={id} />
+              <input id="arquivoUrl" type="hidden" value={url} />
+
+              <FileUploader
+                accept="image/*"
+                name="imagem"
+                randomizeFilename
+                storageRef={fire.default.storage().ref('images')}
+                onUploadStart={handleUploadStart}
+                onUploadError={handleUploadError}
+                onUploadSuccess={handleUploadSuccess}
+                onProgress={handleProgress}>
+              </FileUploader>
+
               <FirestoreMutation path="/mensagens" type="add">
                 {({runMutation})=>{
                   return  <Button variant="contained" color="primary" fullWidth className={classes.entradas} onClick={()=>{
                     let contatoMsg = document.querySelector('#contato').value;
                     let mensagemMsg = document.querySelector('#mensagem').value;
                     let idMsg = document.querySelector('#id').value;
-                    let msg = { de: idMsg, mensagem: mensagemMsg, para: contatoMsg };
+                    let imagemMsg = document.querySelector('#arquivoUrl').value;
+
+                    let msg = { de: idMsg, mensagem: mensagemMsg, para: contatoMsg, imagem: imagemMsg };
 
                     runMutation(msg).then(res => {
                       alert('Mensgem enviada!')

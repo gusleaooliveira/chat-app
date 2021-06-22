@@ -57,6 +57,7 @@ function Contato(props){
             <TextField id="telefoneCadastro" type="tel" label="Telefone:" fullWidth className={classes.entradas} />
             <TextField id="emailCadastro" type="email" label="Email:" fullWidth className={classes.entradas} />
             <input type="hidden" id="idUsuario" value={id} />
+            
 
             <FirestoreMutation path="/contatos" type="add">
               {({runMutation})=>{

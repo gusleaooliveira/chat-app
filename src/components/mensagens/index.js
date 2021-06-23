@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme)=>({
   },
   lista: {
     overflow: 'auto',
-    maxHeight: 300
+    maxHeight: 270
   }
 }))
 

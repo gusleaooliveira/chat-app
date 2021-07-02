@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { TextField, Button, BottomNavigation, BottomNavigationAction  } from '@material-ui/core/';
-import { Save, RecentActors, ExitToApp, Forum } from '@material-ui/icons/';
+import { Save, RecentActors, ExitToApp, AccountBox, Forum } from '@material-ui/icons/';
 import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/firestore';
@@ -13,6 +13,7 @@ import { firebaseConfig } from './config';
 import { useSelector, useDispatch } from 'react-redux';
 import Login from './components/login'
 import Cadastrar from './components/usuario/cadastro';
+import Perfil from './components/usuario/perfil';
 import Agenda from './components/agenda/agenda';
 import Mensagem from './components/mensagens';
 import Contato from './components/agenda/contato';
@@ -101,11 +102,19 @@ function App(props) {
               </div>
             </Route>
 
+            <Route path="/perfil">
+              <div>
+                <Cabecalho tipo="" />
+                {conectado ? <Perfil /> : <Redirect to="/perfil" /> }
+              </div>
+            </Route>
+
             <Redirect from="*" to="/login" />
           </Switch>
 
 
           <BottomNavigation value={value} onChange={handleChange} showLabels className={classes.barra}>
+            <BottomNavigationAction label="Perfil" value="perfil" className={classes.barraItem} component={Link} to="/perfil" icon={<AccountBox />} ></BottomNavigationAction>
             <BottomNavigationAction label="Agenda" value="agenda" className={classes.barraItem} component={Link} to="/agenda" icon={<RecentActors />} />
             <BottomNavigationAction label="Mensagens" value="mensagens" className={classes.barraItem} component={Link} to="/mensagens" icon={<Forum />} />
             <BottomNavigationAction label="Logout" value="logout" className={classes.barraItem} icon={<ExitToApp />} onClick={()=>{
